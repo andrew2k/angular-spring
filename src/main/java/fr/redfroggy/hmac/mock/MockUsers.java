@@ -20,7 +20,7 @@ public class MockUsers {
 
     private static List<UserDTO> users = new ArrayList<>();
     private static  List<ConfirmationCodeEmail> waitingConfirmationList = new ArrayList<ConfirmationCodeEmail>();
-
+    private static  List<ConfirmationCodeEmail> resetPwdConfirmationList = new ArrayList<ConfirmationCodeEmail>();
     
 
     @SuppressWarnings({ "serial", "rawtypes" })
@@ -149,6 +149,30 @@ public class MockUsers {
 		cleanOldCodes();
 	}
     
+    public static void insertResetPwdConfirmation(ConfirmationCodeEmail confirmationCodeEmail){
+    	resetPwdConfirmationList.add(confirmationCodeEmail);
+		cleanOldCodesPwd();
+	}
+    
+    public static boolean resetPwd(String code, String pwd){
+    	boolean passwordChanged = false;
+    	synchronized(MockUsers.class) {
+			ListIterator<ConfirmationCodeEmail> itr = resetPwdConfirmationList.listIterator();
+			while(itr.hasNext()){
+				ConfirmationCodeEmail confirmationCodeEmail = itr.next();
+				if(confirmationCodeEmail.getCode().equals(code)) {
+					UserDTO userDTO = findByUsername(confirmationCodeEmail.getUsername());
+					if(userDTO!=null){
+						userDTO.setPassword(pwd);
+						passwordChanged=true;
+						itr.remove();						
+					}
+				}
+			}
+		}
+    	return passwordChanged;
+    }
+    
     private static void cleanOldCodes(){
 		// clean all verification codes that are older than 7 days
 		synchronized(MockUsers.class) {
@@ -159,6 +183,19 @@ public class MockUsers {
 			}
 		}
 	}
+    
+    private static void cleanOldCodesPwd(){
+		// clean all verification codes that are older than 7 days
+		synchronized(MockUsers.class) {
+			ListIterator<ConfirmationCodeEmail> itr = resetPwdConfirmationList.listIterator();
+			while(itr.hasNext()){
+				if(itr.next().getInsertDate().getTime() <= (new Date().getTime() - (1000*60*60*6)))
+					itr.remove();
+			}
+		}
+	}
+    
+   
     
     
 }

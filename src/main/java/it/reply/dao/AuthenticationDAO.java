@@ -34,5 +34,14 @@ public class AuthenticationDAO {
 		// remember to clean all codes !!! 
 	}
 	
+	public void insertResetPwdConfirmation(ConfirmationCodeEmail confirmationCodeEmail){
+		MockUsers.insertResetPwdConfirmation(confirmationCodeEmail);
+		// remember to clean all codes !!! 
+	}
+	
+	public boolean resetPwd(String code, String pwd){
+		return MockUsers.resetPwd(code, pwd);
+	}
+	
 	
 }

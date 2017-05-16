@@ -1,0 +1,81 @@
+<div class="container" style="max-width: 530px;">
+ <div class="panel"><div class="panel-body">
+
+	<h1> RESET PASSWORD  </h1>
+    
+	<form *ngIf="active" #personForm="ngForm" (ngSubmit)="postForgotPwd()" class="form">
+		
+		<div *ngIf="returnedCode==='error'" >
+       		<div class="alert alert-info" style="font-size:14px; width:400px;">
+       			ERROR ! <br/>
+       			An error occured. Please check the data that you have inserted and retry.
+       		</div>
+       		<div style="height: 10px;" ></div>
+        </div>
+		
+		<div *ngIf="returnedCode==='email_sent'" >
+       		<div class="alert alert-info" style="font-size:14px; width:400px;">
+       			Thankyou ! <br/>
+       			You will soon receive an e-mail to reset your password.  
+       		</div>
+       		<div style="height: 10px;" ></div>
+        </div>
+		
+		
+		<div *ngIf="statusCode==='send_email'" >
+		<div class="form-group">
+			<label for="email"> e-mail </label>
+			<input type="text" class="form-control" required 
+				[(ngModel)]="person.email" name="email" #email="ngModel"
+				pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$" (blur)="onBlurEmail()">
+			<div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+				A valid e-mail is required
+			</div>
+		</div>
+		</div>
+		
+		<div *ngIf="statusCode==='reset_pwd'" >
+		<div class="form-group">
+			<label for="password1"> Password </label>
+			<input type="{{passwordFieldType}}" class="form-control" required minlength=4
+				[(ngModel)]="person.password1" name="password1" #password1="ngModel">
+			<div [hidden]="password1.valid || password1.pristine" class="alert alert-danger">
+				A password of at least 4 characters is required
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="password2"> Repeat Password </label>
+			<input type="{{passwordFieldType}}" class="form-control" required 
+				[(ngModel)]="person.password2" name="password2" #password2="ngModel" 
+				[validateRepPwd]="password1.value">
+			<div [hidden]="password2.valid || password2.pristine" class="alert alert-danger">
+				This password doesn't match the first password !
+			</div>
+		</div>
+		</div>
+		<!--  <div style="display: inline-block;width:15px;"></div>
+		<input type="checkbox" id="checkbox" (click)="hideShowPassword()" />
+  		<label for="checkbox" >show passwords</label>  -->
+
+
+	
+
+		<div *ngIf="returnedCode==='wrong_captcha'" >
+	        <div class="alert alert-danger" style="font-size:14px; width:400px;">
+	        	You typed in a wrong Captcha ! <br/>
+	        	Please try again.  
+	        </div>
+	        <div style="height: 10px;" ></div>
+	    </div>
+
+		<button type="submit" class="btn btn-primary" [disabled]="!personForm.form.valid" >Submit</button>
+
+		<button type="button" class="btn btn-primary" (click)="newPerson()">Reset</button>
+
+	</form>
+	
+	
+	
+ </div></div>
+</div>

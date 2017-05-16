@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import fr.redfroggy.hmac.mock.MockUsers;
+import it.reply.dao.AuthenticationDAO;
 import it.reply.model.Captcha;
 import it.reply.model.Person;
 import it.reply.utility.EmailConfirmation;
@@ -35,6 +36,8 @@ public class ReplyGAController {
 	
 	@Autowired
 	MockUsers mockUsers;
+	
+	@Autowired AuthenticationDAO authenticationDAO;
 	
 	/*private final InMemoryUserDetailsManager inMemoryUserDetailsManager;
 
@@ -74,6 +77,30 @@ public class ReplyGAController {
 			} catch (MessagingException e) {
 				e.printStackTrace();
 				returnedCode="wrong_email";
+			}
+		}
+		
+		return returnedCode;
+    }
+	
+	@RequestMapping(value="/api/forgotPwd", produces="application/json", method = RequestMethod.POST)
+    public String forgotPwd(HttpServletRequest request, @RequestBody Person pr) {
+		// controllare due passwords uguali
+		
+		
+		String returnedCode="error";
+		if(pr.getCaptcha().length()>3 && pr.getEmail()==null){
+			// reset the password
+			boolean passwordChanged = authenticationDAO.resetPwd(pr.getCaptcha(), pr.getPassword1());
+			if(passwordChanged) returnedCode="password_changed";
+		}else{
+			// send the email to reset the password
+			try {
+				emailConfirmation.resetPwdEmail(pr.getEmail(), pr.getPassword1(),
+						request.getRequestURL().toString().replace(request.getRequestURI(), request.getContextPath()));
+				returnedCode="email_sent";
+			} catch (MessagingException e) {
+				e.printStackTrace();
 			}
 		}
 		

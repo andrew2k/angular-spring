@@ -39,5 +39,26 @@ public class EmailConfirmation {
 		
 
 	}
+	
+	
+	public void resetPwdEmail(String toAddress, String password, String baseUrl) throws AddressException, MessagingException{
+		ConfirmationCodeEmail confirmationCodeEmail = new ConfirmationCodeEmail(toAddress, password);
+		authenticationDAO.insertResetPwdConfirmation(confirmationCodeEmail);
+		
+		String verificationAddress = baseUrl + "/#/forgotPwd/reset_pwd/" + confirmationCodeEmail.getCode();
+		
+		String subject = "reset password";
+		
+		String emailText = "";
+		emailText += "<br/><br/>" +
+			"We receveid your reset password request.<br/><br/>" +
+			"You can now reset your password at this address:<br/>" +
+			"<a href=\""+verificationAddress+"\">Reset Password</a><br/><br/>" +
+			"Thankyou";
+		
+		sendEmail.sendEmail(toAddress, subject, emailText);
+		
+
+	}
 
 }

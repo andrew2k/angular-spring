@@ -6,7 +6,8 @@ import { Person } from './person';
 @Injectable()
 export class SubscribeService {
 
-  private subscribeUrl = 'api/register';  // URL to web api
+  private subscribeUrl:string = 'api/register';  // URL to web api
+  private forgotPwdUrl:string = 'api/forgotPwd';  // URL to web api
 
   constructor(private http: Http) { }
 
@@ -14,18 +15,28 @@ export class SubscribeService {
 
   // Subscribe
   public post(person: Person): Promise<String> {
-    let headers = new Headers({
-      'Content-Type': 'application/json'});
+   	return this.postPersonUrl(person, this.subscribeUrl);
+  }
+  
+  // Subscribe
+  public postForgotPwd(person: Person): Promise<String> {
+   	return this.postPersonUrl(person, this.forgotPwdUrl);
+  }
 
-    return this.http
-               .post(this.subscribeUrl, JSON.stringify(person), {headers: headers})
-               .toPromise()
-               .then(res => {console.log(res); return res.text(); })
-               .catch(this.handleError);
-               
-               /*.then(res => {console.log(res.json()); return res.json() as Person; })*/
-               
-               
+
+	public postPersonUrl(person: Person, url:string): Promise<String> {
+	    let headers = new Headers({
+	      'Content-Type': 'application/json'});
+	
+	    return this.http
+	               .post(url, JSON.stringify(person), {headers: headers})
+	               .toPromise()
+	               .then(res => {console.log(res); return res.text(); })
+	               .catch(this.handleError);
+	               
+	               /*.then(res => {console.log(res.json()); return res.json() as Person; })*/
+	               
+	               
   }
 
 

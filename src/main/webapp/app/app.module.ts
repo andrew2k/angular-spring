@@ -14,6 +14,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { Header } from './header/header';
 import {SubscribeComponent} from './subscribe/subscribe.component';
+import {ForgotPwdComponent} from './subscribe/forgotPwd.component';
 import {SubscribeService} from './subscribe/subscribe.service';
 import {RepPwdValidator} from './subscribe/repPwdValidator.directive';
 import { FormsModule} from '@angular/forms';
@@ -27,7 +28,7 @@ import { UtilsModule } from './utils/utils.module';
 
 @NgModule({
     imports:        [ HttpModule, RouterModule, BrowserModule, AccountModule, LoginModule, UserModule, UtilsModule, RoutesModule, FormsModule ],
-    declarations:   [ AppComponent, Header, SubscribeComponent, RepPwdValidator ],
+    declarations:   [ AppComponent, Header, SubscribeComponent, ForgotPwdComponent, RepPwdValidator ],
     bootstrap:      [ AppComponent, Header ],
     providers:      [
         {provide: LocationStrategy, useClass: HashLocationStrategy},

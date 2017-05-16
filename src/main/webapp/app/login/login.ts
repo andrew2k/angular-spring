@@ -89,5 +89,4 @@ console.log(this.error);
 
     gotoSubscribe(){ this.router.navigate(['/subscribe']); }
 
-
 }

@@ -56,7 +56,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/api/register")
                 .antMatchers("/api/confirmEmail")
                 .antMatchers("/api/confirmEmailJsp")
-                .antMatchers("/api/confirm_email");
+                .antMatchers("/api/confirm_email")
+                .antMatchers("/api/forgotPwd");
     }
 	
     @Override

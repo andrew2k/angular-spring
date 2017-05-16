@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 export class AppComponent {
     constructor(router:Router,loginService:LoginService) {
         router.events.subscribe(e => {
-            if( e.url!=='/subscribe' && !e.url.includes('/authenticate')) {
+            if( e.url!=='/subscribe' && !e.url.includes('/authenticate') && !e.url.includes('/forgotPwd')) {
                 if(!loginService.isAuthenticated()) {
                     router.navigate(['/authenticate/default/']);
                 } else {
