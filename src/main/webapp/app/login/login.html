@@ -15,6 +15,14 @@
                 		</div>
                 		<div style="height: 10px;" ></div>
                 	</div>
+                	
+                	<div *ngIf="statusCode==='password_changed'" >
+                		<div class="alert alert-info" style="font-size:14px; width:400px;">
+                			Password changed ! <br/>
+                			You can now log in with your new password.  
+                		</div>
+                		<div style="height: 10px;" ></div>
+                	</div>
 
 					<div style="display: table;margin: 0 auto;">
                     <form class="form" [formGroup]="loginForm" (ngSubmit)="authenticate($event)">
@@ -35,6 +43,10 @@
 	                    	</div>
 	                    	<div style="display: inline-block;">
 	                    		<button (click)="gotoSubscribe()" class="btn btn-primary">Subscribe</button>
+	                    	</div>
+	                    	<div style="display: inline-block;">
+	                    	 <span style="width:11px;display: inline-block;"></span>
+	                    	 <a href="#/forgotPwd/send_email/&"  >Forgot/Reset Password</a>
 	                    	</div>
                     	</div>
                     </form>
