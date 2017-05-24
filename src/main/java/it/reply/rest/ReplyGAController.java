@@ -87,13 +87,15 @@ public class ReplyGAController {
     public String forgotPwd(HttpServletRequest request, @RequestBody Person pr) {
 		// controllare due passwords uguali
 		
-		
+		/* In this case, the captcha variable contains the code */
 		String returnedCode="error";
 		if(pr.getCaptcha().length()>3 && pr.getEmail()==null){
 			// reset the password
 			boolean passwordChanged = authenticationDAO.resetPwd(pr.getCaptcha(), pr.getPassword1());
 			if(passwordChanged) returnedCode="password_changed";
 		}else{
+			//TODO check that the user is already registered !!!!
+			
 			// send the email to reset the password
 			try {
 				emailConfirmation.resetPwdEmail(pr.getEmail(), pr.getPassword1(),

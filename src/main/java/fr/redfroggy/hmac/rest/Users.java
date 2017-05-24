@@ -2,11 +2,12 @@ package fr.redfroggy.hmac.rest;
 
 import fr.redfroggy.hmac.dto.Profile;
 import fr.redfroggy.hmac.dto.UserDTO;
-import fr.redfroggy.hmac.mock.MockUsers;
+import it.reply.dao.AuthenticationDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,19 +18,21 @@ import java.util.List;
 @RequestMapping(value = "/api")
 public class Users {
 
+	@Autowired AuthenticationDAO authenticationDAO;
+	
     @RequestMapping("/users")
-    public List<UserDTO> query(){
-        return MockUsers.getUsers();
+    public Collection<UserDTO> query(){
+        return authenticationDAO.getUsers();
     }
 
     @RequestMapping("/users/{id}")
     public UserDTO query(@PathVariable Integer id){
-        return MockUsers.findById(id);
+        return authenticationDAO.findById(id);
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
     public UserDTO update(@RequestBody @Valid UserDTO userDTO){
-        return MockUsers.update(userDTO);
+        return authenticationDAO.update(userDTO);
     }
 
     @RequestMapping("/users/profiles")

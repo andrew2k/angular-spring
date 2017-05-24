@@ -54,7 +54,7 @@ public class AuthenticationServiceTest {
     private SecurityUser getSecurityUser(String login, String password){
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        return new SecurityUser(1,login,password, Profile.ADMIN,authorities);
+        return new SecurityUser(1,login,password, "ADMIN",authorities);
     }
 
     @Before
@@ -104,7 +104,7 @@ public class AuthenticationServiceTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(passwordAuthenticationToken);
         Mockito.when(passwordAuthenticationToken.isAuthenticated()).thenReturn(true);
         Mockito.when(SecurityContextHolder.getContext()).thenReturn(securityContext);
-        Mockito.when(passwordAuthenticationToken.getPrincipal()).thenReturn(new SecurityUser(1,"login","password",Profile.ADMIN, Arrays.asList(new SimpleGrantedAuthority("ADMIN"))));
+        Mockito.when(passwordAuthenticationToken.getPrincipal()).thenReturn(new SecurityUser(1,"login","password","ADMIN", Arrays.asList(new SimpleGrantedAuthority("ADMIN"))));
 
         authenticationService.logout();
 

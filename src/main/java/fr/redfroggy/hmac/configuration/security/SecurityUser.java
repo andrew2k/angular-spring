@@ -15,13 +15,13 @@ public class SecurityUser extends User{
 
     private Integer id;
 
-    private Profile profile;
+    private String profile;
 
     public SecurityUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
     }
 
-    public SecurityUser(Integer id,String username, String password, Profile profile, Collection<? extends GrantedAuthority> authorities) {
+    public SecurityUser(Integer id,String username, String password, String profile, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.id = id;
         this.profile = profile;
@@ -31,7 +31,7 @@ public class SecurityUser extends User{
         return id;
     }
 
-    public Profile getProfile() {
+    public String getProfile() {
         return profile;
     }
 }

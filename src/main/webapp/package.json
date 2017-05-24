@@ -50,6 +50,7 @@
     "ntsc":"node_modules/ntypescript/bin/ntypescript.js"
   },
   "scripts": {
-    "build": "ntsc -p ../../../"
+    "build": "ntsc -p ../../../",
+    "buildw":"ntsc -w -p ../../../"
   }
 }

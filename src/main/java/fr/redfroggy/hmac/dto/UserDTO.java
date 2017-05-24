@@ -30,7 +30,7 @@ public class UserDTO {
     @JsonIgnore
     private String privateSecret;
 
-    private Profile profile;
+    private String profile;
 
     public Integer getId() {
         return id;
@@ -40,11 +40,11 @@ public class UserDTO {
         this.id = id;
     }
 
-    public Profile getProfile() {
+    public String getProfile() {
         return profile;
     }
 
-    public void setProfile(Profile profile) {
+    public void setProfile(String profile) {
         this.profile = profile;
     }
 

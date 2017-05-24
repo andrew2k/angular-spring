@@ -8,6 +8,12 @@ public class Person {
 	private String captcha;
 	
 	
+	public Person(){	}
+	
+	public Person(String email){
+		this.email=email;
+	}
+	
 	public String getCaptcha() {
 		return captcha;
 	}

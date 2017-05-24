@@ -24,17 +24,17 @@ public class MockUsers {
     
 
     @SuppressWarnings({ "serial", "rawtypes" })
-	private static Map<Profile,List<String>> authorities =  new HashMap(){{
-        put(Profile.ADMIN,Arrays.asList("ROLE_ADMIN","ROLE_MANAGER","ROLE_USER"));
-        put(Profile.USER,Arrays.asList("ROLE_USER"));
-        put(Profile.MANAGER,Arrays.asList("ROLE_MANAGER","ROLE_USER"));
+	private static Map<String,List<String>> authorities =  new HashMap(){{
+        put("ADMIN",Arrays.asList("ROLE_ADMIN","ROLE_MANAGER","ROLE_USER"));
+        put("USER",Arrays.asList("ROLE_USER"));
+        put("MANAGER",Arrays.asList("ROLE_MANAGER","ROLE_USER"));
     }};
 
     public static void mock(){
         UserDTO admin = new UserDTO();
         admin.setId(1);
         admin.setLogin("admin");
-        admin.setProfile(Profile.ADMIN);
+        admin.setProfile("ADMIN");
         admin.setPassword("frog");
         admin.setAuthorities(authorities.get(admin.getProfile()));
         users.add(admin);
@@ -42,7 +42,7 @@ public class MockUsers {
         UserDTO user = new UserDTO();
         user.setId(2);
         user.setLogin("user");
-        user.setProfile(Profile.USER);
+        user.setProfile("USER");
         user.setPassword("frog");
         user.setAuthorities(authorities.get(user.getProfile()));
         users.add(user);
@@ -50,7 +50,7 @@ public class MockUsers {
         UserDTO manager = new UserDTO();
         manager.setId(3);
         manager.setLogin("manager");
-        manager.setProfile(Profile.MANAGER);
+        manager.setProfile("MANAGER");
         manager.setPassword("frog");
         manager.setAuthorities(authorities.get(manager.getProfile()));
         users.add(manager);
@@ -58,7 +58,7 @@ public class MockUsers {
         UserDTO user2 = new UserDTO();
         user2.setId(4);
         user2.setLogin("alex");
-        user2.setProfile(Profile.USER);
+        user2.setProfile("USER");
         user2.setPassword("123456");
         user2.setAuthorities(authorities.get(user2.getProfile()));
         users.add(user2);
@@ -118,7 +118,7 @@ public class MockUsers {
     	UserDTO user = new UserDTO();
     	user.setId(users.size());
     	user.setLogin(username);
-    	user.setProfile(Profile.USER);
+    	user.setProfile("USER");
     	user.setPassword(password);
     	user.setAuthorities(authorities.get(user.getProfile()));
         users.add(user);

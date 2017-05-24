@@ -34,6 +34,8 @@ public class SendEmailTest {
 		
 		sendEmail.sendEmail("atariwwwww@gmail.com", "subject1", "<a href=\"http://google.com\">subject1</a>");
 		
+		
+		
 	}
 	
 	
