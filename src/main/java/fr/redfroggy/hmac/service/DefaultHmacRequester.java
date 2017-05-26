@@ -2,7 +2,9 @@ package fr.redfroggy.hmac.service;
 
 import fr.redfroggy.hmac.configuration.security.hmac.HmacRequester;
 import fr.redfroggy.hmac.dto.UserDTO;
-import fr.redfroggy.hmac.mock.MockUsers;
+import it.reply.dao.AuthenticationDAO;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class DefaultHmacRequester implements HmacRequester{
 
+	@Autowired AuthenticationDAO authenticationDAO;
+	
+	
     @Override
     public Boolean canVerify(HttpServletRequest request) {
         return request.getRequestURI().contains("/api") && !request.getRequestURI().contains("/api/authenticate");
@@ -21,7 +26,8 @@ public class DefaultHmacRequester implements HmacRequester{
 
     @Override
     public String getPublicSecret(String iss) {
-        UserDTO userDTO = MockUsers.findById(Integer.valueOf(iss));
+        /*UserDTO userDTO = MockUsers.findById(Integer.valueOf(iss));*/
+    	UserDTO userDTO = authenticationDAO.findById(Integer.valueOf(iss));
         if(userDTO != null){
             return userDTO.getPublicSecret();
         }

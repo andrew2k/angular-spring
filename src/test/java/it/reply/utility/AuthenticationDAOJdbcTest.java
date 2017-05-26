@@ -1,20 +1,16 @@
 package it.reply.utility;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import fr.redfroggy.hmac.ApplicationTest;
 import fr.redfroggy.hmac.dto.UserDTO;
-import it.reply.dao.AuthenticationDAOjdbc;
+import it.reply.dao.jdbc.AuthenticationDAOjdbc;
 import it.reply.model.ConfirmationCodeEmail;
 import it.reply.model.Person;
 
@@ -27,6 +23,7 @@ public class AuthenticationDAOJdbcTest {
 	@Autowired AuthenticationDAOjdbc authenticationDAOjdbc;
 	
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void testJdbc(){
 		

@@ -1,4 +1,4 @@
-package it.reply.dao;
+package it.reply.dao.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import fr.redfroggy.hmac.dto.UserDTO;
+import it.reply.dao.AuthenticationDAO;
 import it.reply.model.ConfirmationCodeEmail;
 
 /**
@@ -30,25 +31,19 @@ public class AuthenticationDAOjdbc implements AuthenticationDAO {
 	
 	@Override
 	public Collection<UserDTO> getUsers() {
-		List<UserDTO> userDTOList = jdbcTemplate.query("SELECT * from public.users where enabled = 1;",
-				new RowMapper<UserDTO>() {
-		            public UserDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-		            	UserDTO userDTO = new UserDTO();
-		            	userDTO.setLogin(rs.getString("username"));    
-		            	userDTO.setPassword(rs.getString("password"));
-		            	userDTO.setProfile(rs.getString("profile"));
-		                return userDTO;
-		            }
-		});
-		
+		List<UserDTO> userDTOList = jdbcTemplate.query("SELECT * from public.users where enabled = 1;", new UsersRowMapper());
+		if(userDTOList==null || userDTOList.size()==0) return null;
 		for(UserDTO userDTO : userDTOList) loadAuthorities(userDTO);
 		return userDTOList;
 	}
 
 	@Override
 	public UserDTO findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		List<UserDTO> userDTOList = jdbcTemplate.query("SELECT * from public.users where enabled = 1 and user_id = ?;",
+				new UsersRowMapper(), new Object[]{id});
+		if(userDTOList==null || userDTOList.size()==0) return null;
+		loadAuthorities(userDTOList.get(0));
+		return userDTOList.get(0);
 	}
 
 	@Override
@@ -63,15 +58,7 @@ public class AuthenticationDAOjdbc implements AuthenticationDAO {
 				(rs, rowNum) -> new Person(rs.getString("username")));
 		*/
 		List<UserDTO> userDTOList = jdbcTemplate.query("SELECT * from public.users where enabled = 1 and username = ?;",
-				new RowMapper<UserDTO>() {
-		            public UserDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-		            	UserDTO userDTO = new UserDTO();
-		            	userDTO.setLogin(rs.getString("username"));    
-		            	userDTO.setPassword(rs.getString("password"));
-		            	userDTO.setProfile(rs.getString("profile"));
-		                return userDTO;
-		            }
-		}, new Object[]{username});
+				new UsersRowMapper(), new Object[]{username});
 		
 		
 		if(userDTOList!=null && userDTOList.size()>0) {
@@ -120,10 +107,8 @@ public class AuthenticationDAOjdbc implements AuthenticationDAO {
 		
 		jdbcTemplate.update("insert into public.users(username, password, enabled, profile) values (?,?,?,?)", 
 				user.getLogin(), user.getPassword(), 1, user.getProfile());
-
-		loadAuthorities(user);
 		
-		return user;
+		return findByUsername(user.getLogin());
 	}
 
 	@Override

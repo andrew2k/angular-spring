@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import it.reply.dao.AuthenticationDAO;
-import it.reply.dao.AuthenticationDAOjdbc;
+import it.reply.dao.jdbc.AuthenticationDAOjdbc;
 
 @Configuration
 @Profile("jdbc")

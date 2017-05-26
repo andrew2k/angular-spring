@@ -5,6 +5,8 @@ import fr.redfroggy.hmac.configuration.security.hmac.*;
 import fr.redfroggy.hmac.dto.LoginDTO;
 import fr.redfroggy.hmac.dto.UserDTO;
 import fr.redfroggy.hmac.mock.MockUsers;
+import it.reply.dao.AuthenticationDAO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -29,13 +32,11 @@ public class AuthenticationService {
     public static final String CSRF_CLAIM_HEADER = "X-HMAC-CSRF";
     public static final String JWT_CLAIM_LOGIN = "login";
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @Autowired private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private HmacUserDetailsService userDetailsService;
+    @Autowired private HmacUserDetailsService userDetailsService;
     
-
+    @Autowired private AuthenticationDAO authenticationDAO;
 
     /**
      * Authenticate a user in Spring Security
@@ -51,7 +52,7 @@ public class AuthenticationService {
      * @return UserDTO instance
      * @throws HmacException
      */
-    public UserDTO authenticate(LoginDTO loginDTO, HttpServletResponse response) throws HmacException {
+    public UserDTO authenticate(LoginDTO loginDTO, HttpServletRequest request, HttpServletResponse response) throws HmacException {
     	//Retrieve security user after authentication
     	SecurityUser securityUser = null;
     	if(loginDTO.getCode().contains("-sep-") && loginDTO.getCode().length()>10) {
@@ -84,13 +85,29 @@ public class AuthenticationService {
         // Jwt is generated using the private key
         HmacToken hmacToken = HmacSigner.getSignedToken(privateSecret,String.valueOf(securityUser.getId()), HmacSecurityFilter.JWT_TTL,customClaims);
 
-        for(UserDTO userDTO : MockUsers.getUsers()){
+        
+        
+        
+        UserDTO userDTO = authenticationDAO.findById(securityUser.getId());
+        userDTO.setPublicSecret(publicSecret);
+        userDTO.setPrivateSecret(privateSecret);
+        
+        //UserDTO userDTO = new UserDTO();
+        //userDTO.setId(securityUser.getId());
+        userDTO.setLogin(securityUser.getUsername());
+        userDTO.setAuthorities(authorities);
+        userDTO.setProfile(securityUser.getProfile());
+        request.getSession().setAttribute("UserDTO", userDTO);
+        
+        /*for(UserDTO userDTO : MockUsers.getUsers()){
             if(userDTO.getId().equals(securityUser.getId())){
                 //Store in cache both private an public secrets
                 userDTO.setPublicSecret(publicSecret);
                 userDTO.setPrivateSecret(privateSecret);
             }
-        }
+        }*/
+        
+        
 
         // Add jwt cookie
         Cookie jwtCookie = new Cookie(JWT_APP_COOKIE,hmacToken.getJwt());
@@ -107,11 +124,6 @@ public class AuthenticationService {
         //Set JWT as a cookie
         response.addCookie(jwtCookie);
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(securityUser.getId());
-        userDTO.setLogin(securityUser.getUsername());
-        userDTO.setAuthorities(authorities);
-        userDTO.setProfile(securityUser.getProfile());
         return userDTO;
     }
 

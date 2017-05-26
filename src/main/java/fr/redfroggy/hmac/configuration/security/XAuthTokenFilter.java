@@ -1,15 +1,11 @@
 package fr.redfroggy.hmac.configuration.security;
 
 import fr.redfroggy.hmac.dto.UserDTO;
-import fr.redfroggy.hmac.mock.MockUsers;
-import fr.redfroggy.hmac.rest.Authentication;
 import fr.redfroggy.hmac.service.AuthenticationService;
 import fr.redfroggy.hmac.configuration.security.hmac.HmacException;
 import fr.redfroggy.hmac.configuration.security.hmac.HmacSigner;
-import fr.redfroggy.hmac.configuration.security.hmac.HmacUtils;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -69,7 +65,8 @@ public class XAuthTokenFilter extends GenericFilterBean{
                 Assert.notNull(login,"No login found in JWT");
 
                 //Get user from cache
-                UserDTO userDTO = MockUsers.findByUsername(login);
+                UserDTO userDTO = (UserDTO)request.getSession().getAttribute("UserDTO");
+                //UserDTO userDTO = MockUsers.findByUsername(login);
                 Assert.notNull(userDTO,"No user found with login: "+login);
 
                 Assert.isTrue(HmacSigner.verifyJWT(jwt,userDTO.getPrivateSecret()),"The Json Web Token is invalid");

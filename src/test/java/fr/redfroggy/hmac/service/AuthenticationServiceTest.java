@@ -2,7 +2,6 @@ package fr.redfroggy.hmac.service;
 
 import fr.redfroggy.hmac.configuration.security.SecurityUser;
 import fr.redfroggy.hmac.dto.LoginDTO;
-import fr.redfroggy.hmac.dto.Profile;
 import fr.redfroggy.hmac.dto.UserDTO;
 import fr.redfroggy.hmac.mock.MockUsers;
 import fr.redfroggy.hmac.configuration.security.hmac.HmacException;
@@ -25,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,6 +50,9 @@ public class AuthenticationServiceTest {
 
     @Mock
     private HttpServletResponse httpResponse;
+    
+    @Mock
+    private HttpServletRequest httpRequest;
 
     private SecurityUser getSecurityUser(String login, String password){
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -76,7 +79,7 @@ public class AuthenticationServiceTest {
         PowerMockito.when(userDetailsService.loadUserByUsername(loginDTO.getLogin())).thenReturn(securityUser);
         PowerMockito.when(authenticationManager.authenticate(Mockito.any(UsernamePasswordAuthenticationToken.class))).thenReturn(token);
 
-        UserDTO userDTO = authenticationService.authenticate(loginDTO, httpResponse);
+        UserDTO userDTO = authenticationService.authenticate(loginDTO, httpRequest, httpResponse);
         Assert.assertNotNull(userDTO);
         Assert.assertEquals(userDTO.getLogin(),loginDTO.getLogin());
         Assert.assertNotNull(userDTO.getAuthorities());

@@ -1,6 +1,7 @@
 package fr.redfroggy.hmac.configuration.security.hmac;
 
 import fr.redfroggy.hmac.configuration.security.WrappedRequest;
+import fr.redfroggy.hmac.dto.UserDTO;
 import fr.redfroggy.hmac.service.AuthenticationService;
 import org.apache.commons.io.Charsets;
 import org.springframework.util.Assert;
@@ -105,7 +106,11 @@ public class HmacSecurityFilter extends GenericFilterBean {
                 String iss = HmacSigner.getJwtIss(jwt);
 
                 //Get public secret key
-                String secret = hmacRequester.getPublicSecret(iss);
+                UserDTO userDTO = (UserDTO)request.getSession().getAttribute("UserDTO");
+                String secret = null;
+                if(userDTO!=null) secret = userDTO.getPublicSecret();
+                
+                //String secret = hmacRequester.getPublicSecret(iss);
                 Assert.notNull(secret, "Secret key cannot be null");
 
                 String message;
